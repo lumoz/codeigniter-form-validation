@@ -24,9 +24,9 @@
  */
 class IValidation  {
 
-	protected $data		= array();
-	protected $validate	= TRUE;
-	protected $error	= '';
+	private $data		= array();
+	private $validate	= TRUE;
+	private $error		= '';
 
 	/**
 	 * Constructor.
@@ -58,12 +58,12 @@ class IValidation  {
 	/**
 	 * Exit due error.
 	 *
-	 * @access public
+	 * @access private
 	 * @param mixed $error
 	 * @param mixed $field (default: NULL)
 	 * @return void
 	 */
-	public function _error($error, $field = NULL) {
+	private function _error($error, $field = NULL) {
 		if ($this->validate) {
 			$this->error = is_null($field) ? $error : sprintf($error, $field);
 			$this->validate = FALSE;
