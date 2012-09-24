@@ -7,7 +7,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 
 ###How to install
 
-1. Add the file IValidation.php to your /application/libraries folder.
+1. Add the file Validation.php to your /application/libraries folder.
 
 ###How to use
 
@@ -46,9 +46,9 @@ CodeIgniter library for fields form validation. It is independent of the standar
 
 ###How to work
 
-	$this->load->library('ivalidation', $this->input->post());
+	$this->load->library('validation', $this->input->post());
 	
-	$this->ivalidation->required(array('email', 'username', 'firstname', 'lastname', 'city', 'password'), 'Fields are required'),
+	$this->validation->required(array('email', 'username', 'firstname', 'lastname', 'city', 'password'), 'Fields are required'),
 		->email('email', 'Email is not valid field')
 		->maxlen('username', 32, 'Username cannot be longer than 32 characters')
 		->minlen('username', 6, 'Username cannot be shorter than 6 characters')
@@ -56,11 +56,11 @@ CodeIgniter library for fields form validation. It is independent of the standar
 	
 	if ($this->validation->is_valid()) {
 		if ($this->input->post('username') == 'admin')
-			$this->ivalidation->set_not_valid('Username is already registered');
+			$this->validation->set_not_valid('Username is already registered');
 
 	}
 	
-	if ($this->ivalidation->is_valid())
+	if ($this->validation->is_valid())
 		echo 'success!';
 	else
-		echo $this->ivalidation->get_error();
+		echo $this->validation->get_error();
