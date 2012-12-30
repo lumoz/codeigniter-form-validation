@@ -25,6 +25,7 @@
 class Validation  {
 
 	private $data		= array();
+	private $config		= array();
 	private $validate	= TRUE;
 	private $error		= '';
 
@@ -34,10 +35,11 @@ class Validation  {
 	 * @access public
 	 * @return void
 	 */
-	public function __construct($data = NULL) {
+	public function __construct($config = NULL) {
 		$this->CI =& get_instance();
-		if (!empty($data))
-			$this->initialize($data);
+		if (!empty($config))
+			$this->initialize($config);
+		$this->set_post();	// Default data
 	}
 
 	// --------------------------------------------------------------------------
@@ -49,8 +51,45 @@ class Validation  {
 	 * @param mixed $data
 	 * @return void
 	 */
-	public function initialize($data) {
-		$this->data = $data;
+	public function initialize($config) {
+		$this->config = $config;
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 * Set fields data from array.
+	 *
+	 * @access public
+	 * @param mixed $data
+	 * @return void
+	 */
+	public function set_data($data) {
+		$this->data = (array) $data;
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 * Set fields data from POST.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function set_post() {
+		$this->set_data($this->CI->input->post());
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 * Set fields data from GET.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function set_get() {
+		$this->set_data($this->CI->input->get());
 	}
 
 	// --------------------------------------------------------------------------

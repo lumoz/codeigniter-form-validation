@@ -11,12 +11,33 @@ CodeIgniter library for fields form validation. It is independent of the standar
 
 ###How to use
 
-1. Call this:
+1. Load library:
 
-		$this->load->library('validation', $this->input->post());
+		$this->load->library('validation');
+
+2. Load data from:
+
+	a. POST (default):
+	
+			$this->validation->set_post();
+	
+	b. GET:
+	
+			$this->validation->set_get();
+	
+	c. Array data:
+	
+			$this->validation->set_data($data);
+
+3. Load your rules:
+
+		$this->validation->required…
 
 ####Public functions List
 
+- `set_data` Set fields data from array.
+- `set_post` Set fields data from POST.
+- `set_get` Set fields data from GET.
 - `get_error` Get error message
 - `is_valid` Check if form is valid
 - `set_not_valid` Set form not valid ad assign message error
@@ -46,7 +67,9 @@ CodeIgniter library for fields form validation. It is independent of the standar
 
 ###How to work
 
-	$this->load->library('validation', $this->input->post());
+	$this->load->library('validation');
+	$this->validation->set_data($data);
+	// $this->validation->set_post();
 	
 	$this->validation->required(array('email', 'username', 'firstname', 'lastname', 'city', 'password'), 'Fields are required'),
 		->email('email', 'Email is not valid field')
@@ -55,7 +78,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 		->regxp('username', '/^([a-zA-Z0-9\-]*)$/i', 'Username cannot have characters other than letters, numbers and hyphens');
 	
 	if ($this->validation->is_valid()) {
-		if ($this->input->post('username') == 'admin')
+		if ($data['username'] == 'admin')
 			$this->validation->set_not_valid('Username is already registered');
 
 	}
