@@ -64,26 +64,35 @@ CodeIgniter library for fields form validation. It is independent of the standar
 - `checked` Check that the field has been checked
 - `selected` Check that the field has been selected
 - `equal` Check that the two fields are equal
+- `callback` Check the correctness of the field through the function (or the caller class method) callback.
 
 ###How to work
 
-	$this->load->library('validation');
-	$this->validation->set_data($data);
-	// $this->validation->set_post();
+	public function save() {
+		$this->load->library('validation');
+		$this->validation->set_data($data);
+		// $this->validation->set_post();
+		
+		$this->validation->required(array('email', 'username', 'firstname', 'lastname', 'city', 'password'), 'Fields are required'),
+			->email('email', 'Email is not valid field')
+			->maxlen('username', 32, 'Username cannot be longer than 32 characters')
+			->minlen('username', 6, 'Username cannot be shorter than 6 characters')
+			->regxp('username', '/^([a-zA-Z0-9\-]*)$/i', 'Username cannot have characters other than letters, numbers and hyphens')
+			->callback('username', 'check_if_exists', 'Username already exists.');
+		
+		if ($this->validation->is_valid()) {
+			if ($data['username'] == 'admin')
+				$this->validation->set_not_valid('Username is already registered');
 	
-	$this->validation->required(array('email', 'username', 'firstname', 'lastname', 'city', 'password'), 'Fields are required'),
-		->email('email', 'Email is not valid field')
-		->maxlen('username', 32, 'Username cannot be longer than 32 characters')
-		->minlen('username', 6, 'Username cannot be shorter than 6 characters')
-		->regxp('username', '/^([a-zA-Z0-9\-]*)$/i', 'Username cannot have characters other than letters, numbers and hyphens');
-	
-	if ($this->validation->is_valid()) {
-		if ($data['username'] == 'admin')
-			$this->validation->set_not_valid('Username is already registered');
-
+		}
+		
+		if ($this->validation->is_valid())
+			echo 'success!';
+		else
+			echo $this->validation->get_error();
 	}
 	
-	if ($this->validation->is_valid())
-		echo 'success!';
-	else
-		echo $this->validation->get_error();
+	public function check_if_exists($field) {
+		$res = $this->db->query('…');
+		return $res->num != 0 ? FALSE : TRUE;
+	}

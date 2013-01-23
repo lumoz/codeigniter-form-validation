@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.0
+ * @version	1.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -619,6 +619,36 @@ class Validation  {
 			if (strcmp($this->data[$field_1], $this->data[$field_2]) != 0)
 				$this->_error($err_msg);
 		}
+		return $this;
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 * Check the correctness of the field $field through the function
+	 * (or the caller class method) $callback.
+	 *
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed $callback
+	 * @param mixed $err_msg
+	 * @return void
+	 */
+	public function callback($field, $callback, $err_msg) {
+		$bt = debug_backtrace();
+		$class = isset($bt[1]['class']) ? $bt[1]['class'] : NULL;
+		if (is_null($class))
+			if (function_exists($callback))
+				if (!call_user_func($callback, $field))
+					$this->_error($err_msg);
+			else
+				$this->_error('Function `'. $callback .'()` not exists.');
+		else
+			if (method_exists($class, $callback))
+				if (!call_user_func(array($class, $callback), $field))
+					$this->_error($err_msg);
+			else
+				$this->_error('Method `'. $class .':'. $callback .'()` not exists.');
 		return $this;
 	}
 
