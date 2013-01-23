@@ -64,7 +64,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 - `checked` Check that the field has been checked
 - `selected` Check that the field has been selected
 - `equal` Check that the two fields are equal
-- `callback` Check the correctness of the field through the function (or the caller class method) callback.
+- `callback` Check the correctness of the field $param through the method $method.
 
 ###How to work
 

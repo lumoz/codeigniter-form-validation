@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1
+ * @version	1.1.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,12 @@
  */
 class Validation  {
 
-	private $data		= array();
-	private $config		= array();
-	private $validate	= TRUE;
-	private $error		= '';
+	public $CI;
+
+	protected $data		= array();
+	protected $config	= array();
+	protected $validate	= TRUE;
+	protected $error	= '';
 
 	/**
 	 * Constructor.
@@ -38,6 +40,7 @@ class Validation  {
 	 */
 	public function __construct($config = NULL) {
 		$this->CI =& get_instance();
+
 		if (!empty($config))
 			$this->initialize($config);
 		$this->set_post();	// Default data
@@ -625,30 +628,21 @@ class Validation  {
 	// --------------------------------------------------------------------------
 
 	/**
-	 * Check the correctness of the field $field through the function
-	 * (or the caller class method) $callback.
+	 * Check the correctness of the field $param through the method $method.
 	 *
 	 * @access public
-	 * @param mixed $field
-	 * @param mixed $callback
+	 * @param mixed $param
+	 * @param mixed $method
 	 * @param mixed $err_msg
 	 * @return void
 	 */
-	public function callback($field, $callback, $err_msg) {
-		$bt = debug_backtrace();
-		$class = isset($bt[1]['class']) ? $bt[1]['class'] : NULL;
-		if (is_null($class))
-			if (function_exists($callback))
-				if (!call_user_func($callback, $field))
-					$this->_error($err_msg);
-			else
-				$this->_error('Function `'. $callback .'()` not exists.');
-		else
-			if (method_exists($class, $callback))
-				if (!call_user_func(array($class, $callback), $field))
-					$this->_error($err_msg);
-			else
-				$this->_error('Method `'. $class .':'. $callback .'()` not exists.');
+	public function callback($param, $method, $err_msg) {
+		if (!method_exists($this->CI, $method)) {
+			$this->_error('Method `'. $method .'()` not exists.');
+		} else {
+			if ($this->CI->$method($this->data[$param]))
+				$this->_error($err_msg);
+		}
 		return $this;
 	}
 
