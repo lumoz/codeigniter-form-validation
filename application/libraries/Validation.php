@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.1
+ * @version	1.1.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,9 @@ class Validation  {
 	public function __construct($config = NULL) {
 		$this->CI =& get_instance();
 
-		if (!empty($config))
+		if ( ! empty($config)) {
 			$this->initialize($config);
+		}
 		$this->set_post();	// Default data
 	}
 
@@ -159,9 +160,10 @@ class Validation  {
 	 * @param mixed &$param
 	 * @return void
 	 */
-	private function _parse(&$param) {
-		if (!is_array($param))
+	private function _parse( & $param) {
+		if ( ! is_array($param)) {
 			$param = array($param);
+		}
 	}
 
 	// --------------------------------------------------------------------------
@@ -179,8 +181,9 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$this->data[$v] = isset($this->data[$v]) ? trim($this->data[$v]) : '';
-				if (empty($this->data[$v]))
+				if (empty($this->data[$v])) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -201,8 +204,9 @@ class Validation  {
 		$this->CI->load->helper('email');
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if (!valid_email($this->data[$v]))
+				if ( ! valid_email($this->data[$v])) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -223,9 +227,11 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if (!empty($this->data[$v]))
-					if (!preg_match($regexp, $this->data[$v]))
+				if ( ! empty($this->data[$v])) {
+					if ( ! preg_match($regexp, $this->data[$v])) {
 						$this->_error($err_msg, $v);
+					}
+				}
 			}
 		}
 		return $this;
@@ -261,9 +267,11 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if (!empty($this->data[$v]))
-					if (strlen($this->data[$v]) > $len)
+				if ( ! empty($this->data[$v])) {
+					if (strlen($this->data[$v]) > $len) {
 						$this->_error($err_msg, $v);
+					}
+				}
 			}
 		}
 		return $this;
@@ -284,9 +292,11 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if (!empty($this->data[$v]))
-					if (strlen($this->data[$v]) < $len)
+				if ( ! empty($this->data[$v])) {
+					if (strlen($this->data[$v]) < $len) {
 						$this->_error($err_msg);
+					}
+				}
 			}
 		}
 		return $this;
@@ -412,8 +422,9 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if (!$this->num($v, $err_msg) && $this->data[$v] < $num)
+				if ( ! $this->num($v, $err_msg) && $this->data[$v] < $num) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -434,8 +445,9 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if (!$this->num($v, $err_msg) && $this->data[$v] > $num)
+				if ( ! $this->num($v, $err_msg) && $this->data[$v] > $num) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -456,10 +468,11 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$match = array();
-				if (!preg_match('/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{4})$/', $this->data[$v], $match))
+				if ( ! preg_match('/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{4})$/', $this->data[$v], $match)) {
 					$this->_error($err_msg, $v);
-				elseif (!checkdate($match[3], $match[1], $match[5]))
+				} elseif (!checkdate($match[3], $match[1], $match[5])) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -494,8 +507,9 @@ class Validation  {
 	 */
 	public function date_gt($date_1, $date_2, $err_msg = '') {
 		if ($this->is_valid()) {
-			if ($this->date_diff($date_1, $date_2, $err_msg) > 0)
+			if ($this->date_diff($date_1, $date_2, $err_msg) > 0) {
 				$this->_error($err_msg);
+			}
 		}
 		return $this;
 	}
@@ -513,8 +527,9 @@ class Validation  {
 	 */
 	public function date_lt($date_1, $date_2, $err_msg = '') {
 		if ($this->is_valid()) {
-			if ($this->date_diff($date_1, $date_2, $err_msg) < 0)
+			if ($this->date_diff($date_1, $date_2, $err_msg) < 0) {
 				$this->_error($err_msg);
+			}
 		}
 		return $this;
 	}
@@ -534,10 +549,11 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$match = array();
-				if (!preg_match('/^([0-9]{4})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/', $this->data[$v], $match))
+				if ( ! preg_match('/^([0-9]{4})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/', $this->data[$v], $match)) {
 					$this->_error($err_msg, $v);
-				elseif (!checkdate($match[3], $match[5], $match[1]))
+				} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -559,10 +575,11 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$match = array();
-				if (!preg_match($exp, $this->data[$v], $match))
+				if (!preg_match($exp, $this->data[$v], $match)) {
 					$this->_error($err_msg, $v);
-				elseif (!checkdate($match[3], $match[5], $match[1]))
+				} elseif (!checkdate($match[3], $match[5], $match[1])) {
 					$this->_error($err_msg, $v);
+				}
 			}
 		}
 		return $this;
@@ -581,8 +598,9 @@ class Validation  {
 	 */
 	public function checked($field, $checked_value, $err_msg = '') {
 		if ($this->is_valid()) {
-			if (strcmp($this->data[$field], $checked_value) != 0)
+			if (strcmp($this->data[$field], $checked_value) != 0) {
 				$this->_error($err_msg);
+			}
 		}
 		return $this;
 	}
@@ -600,8 +618,9 @@ class Validation  {
 	 */
 	public function selected($field, $err_msg = '', $empty_value = '') {
 		if ($this->is_valid()) {
-			if (strcmp($this->data[$field], $empty_value) != 0)
+			if (strcmp($this->data[$field], $empty_value) != 0) {
 				$this->_error($err_msg);
+			}
 		}
 		return $this;
 	}
@@ -619,8 +638,9 @@ class Validation  {
 	 */
 	public function equal($field_1, $field_2, $err_msg = '') {
 		if ($this->is_valid()) {
-			if (strcmp($this->data[$field_1], $this->data[$field_2]) != 0)
+			if (strcmp($this->data[$field_1], $this->data[$field_2]) != 0) {
 				$this->_error($err_msg);
+			}
 		}
 		return $this;
 	}
@@ -637,11 +657,12 @@ class Validation  {
 	 * @return void
 	 */
 	public function callback($param, $method, $err_msg) {
-		if (!method_exists($this->CI, $method)) {
+		if ( ! method_exists($this->CI, $method)) {
 			$this->_error('Method `'. $method .'()` not exists.');
 		} else {
-			if ($this->CI->$method($this->data[$param]))
+			if ( ! $this->CI->$method($this->data[$param])) {
 				$this->_error($err_msg);
+			}
 		}
 		return $this;
 	}
