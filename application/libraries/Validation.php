@@ -470,7 +470,7 @@ class Validation  {
 				$match = array();
 				if ( ! preg_match('/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{4})$/', $this->data[$v], $match)) {
 					$this->_error($err_msg, $v);
-				} elseif (!checkdate($match[3], $match[1], $match[5])) {
+				} elseif ( ! checkdate($match[3], $match[1], $match[5])) {
 					$this->_error($err_msg, $v);
 				}
 			}
@@ -575,9 +575,9 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$match = array();
-				if (!preg_match($exp, $this->data[$v], $match)) {
+				if ( ! preg_match($exp, $this->data[$v], $match)) {
 					$this->_error($err_msg, $v);
-				} elseif (!checkdate($match[3], $match[5], $match[1])) {
+				} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
 					$this->_error($err_msg, $v);
 				}
 			}
