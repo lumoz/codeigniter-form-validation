@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.3
+ * @version	1.1.4
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -467,11 +467,13 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				$match = array();
-				if ( ! preg_match('/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{4})$/', $this->data[$v], $match)) {
-					$this->_error($err_msg, $v);
-				} elseif ( ! checkdate($match[3], $match[1], $match[5])) {
-					$this->_error($err_msg, $v);
+				if ( ! empty($this->data[$v])) {
+					$match = array();
+					if ( ! preg_match('/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{4})$/', $this->data[$v], $match)) {
+						$this->_error($err_msg, $v);
+					} elseif ( ! checkdate($match[3], $match[1], $match[5])) {
+						$this->_error($err_msg, $v);
+					}
 				}
 			}
 		}
@@ -507,8 +509,10 @@ class Validation  {
 	 */
 	public function date_gt($date_1, $date_2, $err_msg = '') {
 		if ($this->is_valid()) {
-			if ($this->date_diff($date_1, $date_2, $err_msg) > 0) {
-				$this->_error($err_msg);
+			if ( ! empty($date_1) && ! empty($date_2)) {
+				if ($this->date_diff($date_1, $date_2, $err_msg) > 0) {
+					$this->_error($err_msg);
+				}
 			}
 		}
 		return $this;
@@ -527,8 +531,10 @@ class Validation  {
 	 */
 	public function date_lt($date_1, $date_2, $err_msg = '') {
 		if ($this->is_valid()) {
-			if ($this->date_diff($date_1, $date_2, $err_msg) < 0) {
-				$this->_error($err_msg);
+			if ( ! empty($date_1) && ! empty($date_2)) {
+				if ($this->date_diff($date_1, $date_2, $err_msg) < 0) {
+					$this->_error($err_msg);
+				}
 			}
 		}
 		return $this;
@@ -548,11 +554,13 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				$match = array();
-				if ( ! preg_match('/^([0-9]{4})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/', $this->data[$v], $match)) {
-					$this->_error($err_msg, $v);
-				} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
-					$this->_error($err_msg, $v);
+				if ( ! empty($this->data[$v])) {
+					$match = array();
+					if ( ! preg_match('/^([0-9]{4})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/', $this->data[$v], $match)) {
+						$this->_error($err_msg, $v);
+					} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
+						$this->_error($err_msg, $v);
+					}
 				}
 			}
 		}
@@ -574,11 +582,13 @@ class Validation  {
 		$exp = '/^([0-9]{4})([\-])([0-9]{2})([\-])([0-9]{2})[\ ]([0-9]{2})[\:]([0-9]{2})[\:]([0-9]{2})$/';
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				$match = array();
-				if ( ! preg_match($exp, $this->data[$v], $match)) {
-					$this->_error($err_msg, $v);
-				} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
-					$this->_error($err_msg, $v);
+				if ( ! empty($this->data[$v])) {
+					$match = array();
+					if ( ! preg_match($exp, $this->data[$v], $match)) {
+						$this->_error($err_msg, $v);
+					} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
+						$this->_error($err_msg, $v);
+					}
 				}
 			}
 		}
