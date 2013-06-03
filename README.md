@@ -78,7 +78,8 @@ CodeIgniter library for fields form validation. It is independent of the standar
 			->maxlen('username', 32, 'Username cannot be longer than 32 characters')
 			->minlen('username', 6, 'Username cannot be shorter than 6 characters')
 			->regxp('username', '/^([a-zA-Z0-9\-]*)$/i', 'Username cannot have characters other than letters, numbers and hyphens')
-			->callback('username', '_unique', 'Username already exists.');
+			->callback('_unique', 'Username already exists.', 'username')
+			->callback('_other_func', 'Your error.');
 		
 		if ($this->validation->is_valid()) {
 			if ($data['username'] == 'admin')
@@ -92,7 +93,12 @@ CodeIgniter library for fields form validation. It is independent of the standar
 			echo $this->validation->get_error();
 	}
 	
-	public function _unique($field) {
+	public function _unique($username) {
 		$res = $this->db->query('…');
 		return $res->id != 0;
+	}
+	
+	public function _other_func() {
+		// Check something
+		return $error;
 	}

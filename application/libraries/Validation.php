@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.4
+ * @version	1.1.5
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -658,27 +658,42 @@ class Validation  {
 	// --------------------------------------------------------------------------
 
 	/**
-	 * Check the correctness of the field $param through the method $method.
+	 * Check the correctness of the field $param through the method $method
 	 *
 	 * @access public
-	 * @param mixed $param
-	 * @param mixed $method
+	 * @param mixed $callback
 	 * @param mixed $err_msg
-	 * @param mixed $context (default: NULL)
+	 * @param mixed $parameters (default: array())
 	 * @return void
 	 */
-	public function callback($param, $method, $err_msg, $context = NULL) {
-		$object = is_null($context) ? $this->CI : $context;
-		if ( ! method_exists($object, $method)) {
-			$this->_error('Method `'. $method .'()` not exists.');
+	public function callback($callback, $err_msg, $parameters = array()) {
+
+		// If $callback is a string, transform to array
+		if ( ! is_array($callback)) {
+			$callback = array($this->CI, $callback);
+		}
+
+		if ( ! method_exists($callback[0], $callback[1])) {
+			$this->_error('Method `'. $callback[1] .'()` not exists.');
 		} else {
-			if ( ! $object->$method($this->data[$param])) {
+
+			// If method exists, call func with data parameters
+			$callback_parameters = array();
+			if (is_array($parameters)) {
+				foreach ($parameters as $value) {
+					$callback_parameters[] = $this->data[$value];
+				}
+			} else {
+				$callback_parameters[] = $this->data[$parameters];
+			}
+
+			// Call method
+			if ( ! call_user_func($callback, $callback_parameters)) {
 				$this->_error($err_msg);
 			}
 		}
 		return $this;
 	}
-
 }
 
 /* End of file Validation.php */
