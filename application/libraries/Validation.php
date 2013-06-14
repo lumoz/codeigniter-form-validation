@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.5
+ * @version	1.1.6
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -681,10 +681,10 @@ class Validation  {
 			$callback_parameters = array();
 			if (is_array($parameters)) {
 				foreach ($parameters as $value) {
-					$callback_parameters[] = $this->data[$value];
+					$callback_parameters[$value] = $this->data[$value];
 				}
 			} else {
-				$callback_parameters[] = $this->data[$parameters];
+				$callback_parameters[$parameters] = $this->data[$parameters];
 			}
 
 			// Call method
