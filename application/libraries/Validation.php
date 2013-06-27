@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.6
+ * @version	1.1.7
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -204,8 +204,10 @@ class Validation  {
 		$this->CI->load->helper('email');
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if ( ! valid_email($this->data[$v])) {
-					$this->_error($err_msg, $v);
+				if ( ! empty($this->data[$v])) {
+					if ( ! valid_email($this->data[$v])) {
+						$this->_error($err_msg, $v);
+					}
 				}
 			}
 		}
