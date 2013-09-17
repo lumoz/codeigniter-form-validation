@@ -42,6 +42,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 - `is_valid` Check if form is valid
 - `set_not_valid` Set form not valid ad assign message error
 - `required` Check required fields
+- `required_isset` Check required fields only if is set
 - `email` Check if email fields are valid
 - `regexp` Check that the fields meet a particular regular expression
 - `url` Check URL fields are valid
@@ -79,6 +80,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 			->minlen('username', 6, 'Username cannot be shorter than 6 characters')
 			->regxp('username', '/^([a-zA-Z0-9\-]*)$/i', 'Username cannot have characters other than letters, numbers and hyphens')
 			->callback('_unique', 'Username already exists.', 'username')
+			->callback(array($your_model, 'method_name'), 'Error message', array('parameter1', 'parameter2', 'parameter3'))
 			->callback('_other_func', 'Your error.');
 		
 		if ($this->validation->is_valid()) {

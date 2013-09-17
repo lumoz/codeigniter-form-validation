@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.7
+ * @version	1.1.8
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,6 +71,7 @@ class Validation  {
 	 */
 	public function set_data($data) {
 		$this->data = (array) $data;
+		return $this;
 	}
 
 	// --------------------------------------------------------------------------
@@ -83,6 +84,7 @@ class Validation  {
 	 */
 	public function set_post() {
 		$this->set_data($this->CI->input->post());
+		return $this;
 	}
 
 	// --------------------------------------------------------------------------
@@ -95,6 +97,7 @@ class Validation  {
 	 */
 	public function set_get() {
 		$this->set_data($this->CI->input->get());
+		return $this;
 	}
 
 	// --------------------------------------------------------------------------
@@ -184,6 +187,32 @@ class Validation  {
 				if (empty($this->data[$v])) {
 					$this->_error($err_msg, $v);
 				}
+			}
+		}
+		return $this;
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Check required fields only if isset.
+	 *
+	 * @access public
+	 * @param mixed $fields
+	 * @param string $err_msg (default: '')
+	 * @return void
+	 */
+	public function required_isset($fields, $err_msg = '') {
+		$this->_parse($fields);
+		foreach ($fields as $v) {
+			if ($this->is_valid()) {
+				if (isset($this->data[$v])) {
+					$this->data[$v] = trim($this->data[$v]);
+					if (empty($this->data[$v])) {
+						$this->_error($err_msg, $v);
+					}
+				}
+
 			}
 		}
 		return $this;
@@ -669,29 +698,26 @@ class Validation  {
 	 * @return void
 	 */
 	public function callback($callback, $err_msg, $parameters = array()) {
+		if ($this->is_valid()) {
 
-		// If $callback is a string, transform to array
-		if ( ! is_array($callback)) {
-			$callback = array($this->CI, $callback);
-		}
-
-		if ( ! method_exists($callback[0], $callback[1])) {
-			$this->_error('Method `'. $callback[1] .'()` not exists.');
-		} else {
-
-			// If method exists, call func with data parameters
-			$callback_parameters = array();
-			if (is_array($parameters)) {
-				foreach ($parameters as $value) {
-					$callback_parameters[$value] = $this->data[$value];
-				}
-			} else {
-				$callback_parameters[$parameters] = $this->data[$parameters];
+			// If $callback is a string, transform to array
+			if ( ! is_array($callback)) {
+				$callback = array($this->CI, $callback);
 			}
 
-			// Call method
-			if ( ! call_user_func($callback, $callback_parameters)) {
-				$this->_error($err_msg);
+			if ( ! method_exists($callback[0], $callback[1])) {
+				$this->_error('Method `'. $callback[1] .'()` not exists.');
+			} else {
+
+				// If method exists, call func with data parameters
+				if ( ! is_array($parameters)) {
+					$parameters = array($parameters);
+				}
+
+				// Call method
+				if ( ! call_user_func_array($callback, $parameters)) {
+					$this->_error($err_msg);
+				}
 			}
 		}
 		return $this;
