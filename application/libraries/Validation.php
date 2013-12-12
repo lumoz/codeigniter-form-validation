@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.8
+ * @version	1.1.9
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -585,7 +585,7 @@ class Validation  {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if ( ! empty($this->data[$v])) {
+				if ( ! empty($this->data[$v]) && $this->data[$v] != '0000-00-00') {
 					$match = array();
 					if ( ! preg_match('/^([0-9]{4})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/', $this->data[$v], $match)) {
 						$this->_error($err_msg, $v);
@@ -613,7 +613,7 @@ class Validation  {
 		$exp = '/^([0-9]{4})([\-])([0-9]{2})([\-])([0-9]{2})[\ ]([0-9]{2})[\:]([0-9]{2})[\:]([0-9]{2})$/';
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if ( ! empty($this->data[$v])) {
+				if ( ! empty($this->data[$v]) && $this->data[$v] != '0000-00-00 00:00:00') {
 					$match = array();
 					if ( ! preg_match($exp, $this->data[$v], $match)) {
 						$this->_error($err_msg, $v);
