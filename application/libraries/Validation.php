@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.1.9
+ * @version	1.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,11 @@ class Validation  {
 
 	public $CI;
 
-	protected $data		= array();
-	protected $config	= array();
-	protected $validate	= TRUE;
-	protected $error	= '';
+	protected $data				= array();
+	protected $config			= array();
+	protected $validate			= TRUE;
+	protected $error_message	= '';
+	protected $error_field		= NULL;
 
 	/**
 	 * Constructor.
@@ -47,7 +48,7 @@ class Validation  {
 		$this->set_post();	// Default data
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Initialize library.
@@ -60,7 +61,7 @@ class Validation  {
 		$this->config = $config;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Set fields data from array.
@@ -74,7 +75,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Set fields data from POST.
@@ -87,7 +88,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Set fields data from GET.
@@ -100,7 +101,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Exit due error.
@@ -112,24 +113,54 @@ class Validation  {
 	 */
 	private function _error($error, $field = NULL) {
 		if ($this->validate) {
-			$this->error = is_null($field) ? $error : sprintf($error, $field);
+			$this->error_message = is_null($field)
+				? $error
+				: sprintf($error, $field);
+			$this->error_field = $field;
 			$this->validate = FALSE;
 		}
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
-	 * Return error message.
+	 * Return error data: message and field (if exists).
 	 *
 	 * @access public
 	 * @return void
 	 */
 	public function get_error() {
-		return $this->error;
+		return (object) array(
+			'message'	=> $this->error_message
+			, 'field'	=> $this->error_field
+		);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Return error message.
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function get_error_message() {
+		return $this->get_error()->message;
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Return error field.
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function get_error_field() {
+		return $this->get_error()->field;
+	}
+
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check if form is valid.
@@ -141,7 +172,7 @@ class Validation  {
 		return $this->validate;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Set form as invalid by passing the string corresponding error.
@@ -154,7 +185,7 @@ class Validation  {
 		$this->_error($error);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * If you pass string parameter and not array, puts it in an array.
@@ -169,7 +200,7 @@ class Validation  {
 		}
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check required fields.
@@ -218,7 +249,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check if email fields are valid.
@@ -243,7 +274,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that the fields meet a particular regular expression.
@@ -268,7 +299,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check URL fields.
@@ -279,11 +310,12 @@ class Validation  {
 	 * @return void
 	 */
 	public function url($fields, $err_msg = '') {
-		$regexp = '/^(https?\:\/\/){0,1}(www\.){0,1}([a-z0-9-_.]+)(\.{1})([a-z]{2,4})$/i';
+		$regexp = '/^(https?\:\/\/){0,1}(www\.){0,1}'
+			.'([a-z0-9-_.]+)(\.{1})([a-z]{2,4})$/i';
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that fields are not longer than a defined value.
@@ -308,7 +340,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that fields are not shorter than a defined value.
@@ -333,10 +365,10 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
-	 * Check that fields do not have characters other than letters of the alphabet.
+	 * Check that fields do not have characters other than letters of alphabet.
 	 *
 	 * @access public
 	 * @param mixed $fields
@@ -348,10 +380,11 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
-	 * Check that fields do not have characters other than letters of the alphabet and space.
+	 * Check that fields do not have characters other than letters of
+	 * alphabet and space.
 	 *
 	 * @access public
 	 * @param mixed $fields
@@ -363,7 +396,7 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that fields do not have characters other than numbers.
@@ -378,7 +411,7 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that fields do not have characters other than numbers and space.
@@ -393,7 +426,7 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that fields do not have characters other than letters and numbers.
@@ -408,10 +441,11 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
-	 * Check that fields do not have characters other than letters of the alphabet, numbers and space.
+	 * Check that fields do not have characters other than letters of
+	 * alphabet, numbers and space.
 	 *
 	 * @access public
 	 * @param mixed $fields
@@ -423,7 +457,7 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that fields do not have spaces.
@@ -438,7 +472,7 @@ class Validation  {
 		return $this->regexp($fields, $regexp, $err_msg);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check if a numeric field is greater than a certain value.
@@ -461,7 +495,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check if a numeric field is less than a certain value.
@@ -484,7 +518,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that the fields have a date.
@@ -495,12 +529,14 @@ class Validation  {
 	 * @return void
 	 */
 	public function date($fields, $err_msg = '') {
+		$exp = '/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})'
+			.'([^A-Za-z0-9]{1})([0-9]{4})$/';
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				if ( ! empty($this->data[$v])) {
 					$match = array();
-					if ( ! preg_match('/^([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{4})$/', $this->data[$v], $match)) {
+					if ( ! preg_match($exp, $this->data[$v], $match)) {
 						$this->_error($err_msg, $v);
 					} elseif ( ! checkdate($match[3], $match[1], $match[5])) {
 						$this->_error($err_msg, $v);
@@ -511,7 +547,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check the difference between two dates.
@@ -527,7 +563,7 @@ class Validation  {
 		return round(($d1 - $d2)/60/60/24);
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that a date is larger than other.
@@ -549,7 +585,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that a date is smaller than other.
@@ -571,7 +607,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that the fields have a English date.
@@ -582,38 +618,13 @@ class Validation  {
 	 * @return void
 	 */
 	public function date_en($fields, $err_msg = '') {
+		$exp = '/^([0-9]{4})([^A-Za-z0-9]{1})'
+			.'([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/';
 		$this->_parse($fields);
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
-				if ( ! empty($this->data[$v]) && $this->data[$v] != '0000-00-00') {
-					$match = array();
-					if ( ! preg_match('/^([0-9]{4})([^A-Za-z0-9]{1})([0-9]{2})([^A-Za-z0-9]{1})([0-9]{2})$/', $this->data[$v], $match)) {
-						$this->_error($err_msg, $v);
-					} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
-						$this->_error($err_msg, $v);
-					}
-				}
-			}
-		}
-		return $this;
-	}
-
-	// --------------------------------------------------------------------------
-
-	/**
-	 * Check that the fields have a datetime value.
-	 *
-	 * @access public
-	 * @param mixed $fields
-	 * @param string $err_msg (default: '')
-	 * @return void
-	 */
-	public function datetime($fields, $err_msg = '') {
-		$this->_parse($fields);
-		$exp = '/^([0-9]{4})([\-])([0-9]{2})([\-])([0-9]{2})[\ ]([0-9]{2})[\:]([0-9]{2})[\:]([0-9]{2})$/';
-		foreach ($fields as $v) {
-			if ($this->is_valid()) {
-				if ( ! empty($this->data[$v]) && $this->data[$v] != '0000-00-00 00:00:00') {
+				if ( ! empty($this->data[$v])
+					&& $this->data[$v] != '0000-00-00') {
 					$match = array();
 					if ( ! preg_match($exp, $this->data[$v], $match)) {
 						$this->_error($err_msg, $v);
@@ -626,7 +637,37 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Check that the fields have a datetime value.
+	 *
+	 * @access public
+	 * @param mixed $fields
+	 * @param string $err_msg (default: '')
+	 * @return void
+	 */
+	public function datetime($fields, $err_msg = '') {
+		$this->_parse($fields);
+		$exp = '/^([0-9]{4})([\-])([0-9]{2})([\-])([0-9]{2})[\ ]'
+			.'([0-9]{2})[\:]([0-9]{2})[\:]([0-9]{2})$/';
+		foreach ($fields as $v) {
+			if ($this->is_valid()) {
+				if ( ! empty($this->data[$v])
+					&& $this->data[$v] != '0000-00-00 00:00:00') {
+					$match = array();
+					if ( ! preg_match($exp, $this->data[$v], $match)) {
+						$this->_error($err_msg, $v);
+					} elseif ( ! checkdate($match[3], $match[5], $match[1])) {
+						$this->_error($err_msg, $v);
+					}
+				}
+			}
+		}
+		return $this;
+	}
+
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that the field has been checked.
@@ -646,7 +687,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that the field has been selected.
@@ -666,7 +707,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check that the two fields are equal.
@@ -686,7 +727,7 @@ class Validation  {
 		return $this;
 	}
 
-	// --------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Check the correctness of the field $param through the method $method

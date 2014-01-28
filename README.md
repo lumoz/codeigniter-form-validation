@@ -18,15 +18,15 @@ CodeIgniter library for fields form validation. It is independent of the standar
 2. Load data from:
 
 	a. POST (default):
-	
+
 			$this->validation->set_post();
-	
+
 	b. GET:
-	
+
 			$this->validation->set_get();
-	
+
 	c. Array data:
-	
+
 			$this->validation->set_data($data);
 
 3. Load your rules:
@@ -35,10 +35,12 @@ CodeIgniter library for fields form validation. It is independent of the standar
 
 ####Public functions List
 
-- `set_data` Set fields data from array.
-- `set_post` Set fields data from POST.
-- `set_get` Set fields data from GET.
-- `get_error` Get error message
+- `set_data` Set fields data from array
+- `set_post` Set fields data from POST
+- `set_get` Set fields data from GET
+- `get_error` Return error data: message and field (if exists)
+- `get_error_message` Return error message
+- `get_error_field` Return error field
 - `is_valid` Check if form is valid
 - `set_not_valid` Set form not valid ad assign message error
 - `required` Check required fields
@@ -48,12 +50,12 @@ CodeIgniter library for fields form validation. It is independent of the standar
 - `url` Check URL fields are valid
 - `maxlen` Check that fields are not longer than a defined value
 - `minlen` Check that fields are not shorter than a defined value
-- `alpha` Check that fields do not have characters other than letters of the alphabet
-- `alpha_s` Check that fields do not have characters other than letters of the alphabet and space
+- `alpha` Check that fields do not have characters other than letters of alphabet
+- `alpha_s` Check that fields do not have characters other than letters of alphabet and space
 - `num` Check that fields do not have characters other than numbers
 - `num_s` Check that fields do not have characters other than numbers and space
 - `alphanum` Check that fields do not have characters other than letters and numbers
-- `alphanum_s` Check that fields do not have characters other than letters of the alphabet, numbers and space
+- `alphanum_s` Check that fields do not have characters other than letters of alphabet, numbers and space
 - `no_spaces` Check that fields do not have spaces
 - `num_gt` Check if a numeric field is greater than a certain value
 - `num_lt` Check if a numeric field is less than a certain value
@@ -73,7 +75,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 		$this->load->library('validation');
 		$this->validation->set_data($data);
 		// $this->validation->set_post();
-		
+
 		$this->validation->required(array('email', 'username', 'firstname', 'lastname', 'city', 'password'), 'Fields are required'),
 			->email('email', 'Email is not valid field')
 			->maxlen('username', 32, 'Username cannot be longer than 32 characters')
@@ -82,24 +84,24 @@ CodeIgniter library for fields form validation. It is independent of the standar
 			->callback('_unique', 'Username already exists.', 'username')
 			->callback(array($your_model, 'method_name'), 'Error message', array('parameter1', 'parameter2', 'parameter3'))
 			->callback('_other_func', 'Your error.');
-		
+
 		if ($this->validation->is_valid()) {
 			if ($data['username'] == 'admin')
 				$this->validation->set_not_valid('Username is already registered');
-	
+
 		}
-		
+
 		if ($this->validation->is_valid())
 			echo 'success!';
 		else
-			echo $this->validation->get_error();
+			echo $this->validation->get_error_message();
 	}
-	
+
 	public function _unique($username) {
 		$res = $this->db->query('…');
 		return $res->id != 0;
 	}
-	
+
 	public function _other_func() {
 		// Check something
 		return $error;
