@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.2
+ * @version	1.2.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,10 +127,10 @@ class Validation  {
 	 * Return error data: message and field (if exists).
 	 *
 	 * @access public
-	 * @return void
+	 * @return array
 	 */
 	public function get_error() {
-		return (object) array(
+		return array(
 			'message'	=> $this->error_message
 			, 'field'	=> $this->error_field
 		);
@@ -145,7 +145,7 @@ class Validation  {
 	 * @return string
 	 */
 	public function get_error_message() {
-		return $this->get_error()->message;
+		return $this->error_message;
 	}
 
 	// ------------------------------------------------------------------------
@@ -157,7 +157,7 @@ class Validation  {
 	 * @return string
 	 */
 	public function get_error_field() {
-		return $this->get_error()->field;
+		return $this->error_field;
 	}
 
 	// ------------------------------------------------------------------------
@@ -486,8 +486,9 @@ class Validation  {
 	public function num_gt($fields, $num, $err_msg = '') {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
+			$this->num($v, $err_msg);
 			if ($this->is_valid()) {
-				if ( ! $this->num($v, $err_msg) && $this->data[$v] < $num) {
+				if ($this->data[$v] < $num) {
 					$this->_error($err_msg, $v);
 				}
 			}
@@ -509,8 +510,9 @@ class Validation  {
 	public function num_lt($fields, $num, $err_msg = '') {
 		$this->_parse($fields);
 		foreach ($fields as $v) {
+			$this->num($v, $err_msg);
 			if ($this->is_valid()) {
-				if ( ! $this->num($v, $err_msg) && $this->data[$v] > $num) {
+				if ($this->data[$v] > $num) {
 					$this->_error($err_msg, $v);
 				}
 			}
