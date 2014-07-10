@@ -162,7 +162,11 @@ class Validation  {
 	 * @return string
 	 */
 	public function get_error_message() {
-		$error = $this->before_delimiter.$this->error_message.$this->after_delimiter;
+		if(!empty($this->error_message)){
+			$error = $this->before_delimiter.$this->error_message.$this->after_delimiter;
+		}else{
+			$error = '';
+		}
 		return $error;
 	}
 
@@ -175,7 +179,11 @@ class Validation  {
 	 * @return string
 	 */
 	public function get_error_field() {
-		$error = $this->before_delimiter.$this->error_field.$this->after_delimiter;
+		if(!empty($this->error_message)){
+			$error = $this->before_delimiter.$this->error_field.$this->after_delimiter;
+		}else{
+			$error = '';
+		}
 		return $error;
 	}
 
