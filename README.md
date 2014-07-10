@@ -32,6 +32,10 @@ CodeIgniter library for fields form validation. It is independent of the standar
 3. Load your rules:
 
 		$this->validation->required…
+		
+4. Change the error delimiters.
+	
+		$this->validation->set_error_delimiters($delimiter1,$delimiter2);
 
 ####Public functions List
 
