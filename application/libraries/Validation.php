@@ -32,6 +32,8 @@ class Validation  {
 	protected $validate			= TRUE;
 	protected $error_message	= '';
 	protected $error_field		= NULL;
+	protected $before_delimiter	= '';
+	protected $after_delimiter	= '';
 
 	/**
 	 * Constructor.
@@ -120,7 +122,22 @@ class Validation  {
 			$this->validate = FALSE;
 		}
 	}
+	
+	// ------------------------------------------------------------------------
 
+	/**
+	 * Change the delimiters of the errors message.
+	 *
+	 * @access public
+	 * @param string $before
+	 * @param string $after
+	 * @return void
+	 */
+	public function set_error_delimiters($before,$after) {
+		$this->before_delimiter = $before;
+		$this->after_delimiter = $after;
+	}
+	
 	// ------------------------------------------------------------------------
 
 	/**
@@ -145,7 +162,8 @@ class Validation  {
 	 * @return string
 	 */
 	public function get_error_message() {
-		return $this->error_message;
+		$error = $this->before_delimiter.$this->error_message.$this->after_delimiter;
+		return $error;
 	}
 
 	// ------------------------------------------------------------------------
@@ -157,7 +175,8 @@ class Validation  {
 	 * @return string
 	 */
 	public function get_error_field() {
-		return $this->error_field;
+		$error = $this->before_delimiter.$this->error_field.$this->after_delimiter;
+		return $error;
 	}
 
 	// ------------------------------------------------------------------------
