@@ -215,7 +215,7 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$this->data[$v] = isset($this->data[$v]) ? trim($this->data[$v]) : '';
-				if (empty($this->data[$v])) {
+				if (empty($this->data[$v]) && $this->data[$v] != 0) {
 					$this->_error($err_msg, $v);
 				}
 			}
