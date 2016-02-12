@@ -488,7 +488,7 @@ class Validation  {
 		foreach ($fields as $v) {
 			$this->num($v, $err_msg);
 			if ($this->is_valid()) {
-				if ($this->data[$v] < $num) {
+				if ((int)$this->data[$v] > $num) {
 					$this->_error($err_msg, $v);
 				}
 			}
@@ -512,7 +512,7 @@ class Validation  {
 		foreach ($fields as $v) {
 			$this->num($v, $err_msg);
 			if ($this->is_valid()) {
-				if ($this->data[$v] > $num) {
+				if ((int)$this->data[$v] < $num) {
 					$this->_error($err_msg, $v);
 				}
 			}
