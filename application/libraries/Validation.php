@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.2.2
+ * @version	1.2.3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,11 +27,11 @@ class Validation  {
 
 	public $CI;
 
-	protected $data				= array();
-	protected $config			= array();
-	protected $validate			= TRUE;
-	protected $error_message	= '';
-	protected $error_field		= NULL;
+	protected $data          = array();
+	protected $config        = array();
+	protected $validate      = TRUE;
+	protected $error_message = '';
+	protected $error_field   = NULL;
 
 	/**
 	 * Constructor.
@@ -215,7 +215,7 @@ class Validation  {
 		foreach ($fields as $v) {
 			if ($this->is_valid()) {
 				$this->data[$v] = isset($this->data[$v]) ? trim($this->data[$v]) : '';
-				if (empty($this->data[$v]) && $this->data[$v] != 0) {
+				if (empty($this->data[$v]) && $this->data[$v] !== 0) {
 					$this->_error($err_msg, $v);
 				}
 			}
@@ -682,7 +682,7 @@ class Validation  {
 	 */
 	public function checked($field, $checked_value, $err_msg = '') {
 		if ($this->is_valid()) {
-			if (strcmp($this->data[$field], $checked_value) != 0) {
+			if (strcmp($this->data[$field], $checked_value) !== 0) {
 				$this->_error($err_msg);
 			}
 		}
@@ -702,7 +702,7 @@ class Validation  {
 	 */
 	public function selected($field, $err_msg = '', $empty_value = '') {
 		if ($this->is_valid()) {
-			if (strcmp($this->data[$field], $empty_value) != 0) {
+			if (strcmp($this->data[$field], $empty_value) !== 0) {
 				$this->_error($err_msg);
 			}
 		}
@@ -722,7 +722,7 @@ class Validation  {
 	 */
 	public function equal($field_1, $field_2, $err_msg = '') {
 		if ($this->is_valid()) {
-			if (strcmp($this->data[$field_1], $this->data[$field_2]) != 0) {
+			if (strcmp($this->data[$field_1], $this->data[$field_2]) !== 0) {
 				$this->_error($err_msg);
 			}
 		}
