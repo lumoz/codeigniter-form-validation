@@ -99,7 +99,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 	}
 
 	public function _unique($key) {
-		$value = $this->get_data($key);
+		$value = $this->validation->get_data($key);
 		$res = $this->db->query('…');
 		return $res->id != 0;
 	}
