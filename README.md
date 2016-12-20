@@ -38,6 +38,7 @@ CodeIgniter library for fields form validation. It is independent of the standar
 - `set_data` Set fields data from array
 - `set_post` Set fields data from POST
 - `set_get` Set fields data from GET
+- `get_data` Get array data or a single field value (if key passed)
 - `get_error` Return error data: message and field (if exists)
 - `get_error_message` Return error message
 - `get_error_field` Return error field
@@ -97,7 +98,8 @@ CodeIgniter library for fields form validation. It is independent of the standar
 			echo $this->validation->get_error_message();
 	}
 
-	public function _unique($username) {
+	public function _unique($key) {
+		$value = $this->get_data($key);
 		$res = $this->db->query('…');
 		return $res->id != 0;
 	}

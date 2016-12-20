@@ -4,7 +4,7 @@
  * Library for CodeIgniter to validate form via Ajax.
  * @author	Luigi Mozzillo <luigi@innato.it>
  * @link	http://innato.it
- * @version	1.2.3
+ * @version	1.3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,6 +99,21 @@ class Validation  {
 	public function set_get() {
 		$this->set_data($this->CI->input->get());
 		return $this;
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Get array data or a single field value (if key passed).
+	 *
+	 * @method get_data
+	 * @param  string   $key
+	 * @return mixed
+	 */
+	public function get_data($key = NULL) {
+		return is_null($key)
+			? $this->data
+			: (isset($this->data[$key]) ? $this->data[$key] : NULL);
 	}
 
 	// ------------------------------------------------------------------------
