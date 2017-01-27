@@ -372,7 +372,7 @@ class Validation  {
 			if ($this->is_valid()) {
 				if ( ! empty($this->data[$v])) {
 					if (strlen($this->data[$v]) < $len) {
-						$this->_error($err_msg);
+						$this->_error($err_msg, $v);
 					}
 				}
 			}
